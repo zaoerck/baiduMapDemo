@@ -93,7 +93,7 @@ public class RegisterActivity extends Activity {
 				String accountStr = account.getText().toString().trim();
 				String passwordStr = password.getText().toString().trim();
 				String rePasswordStr = rePassword.getText().toString().trim();
-				String gendar = male.isChecked()?"男":"女";
+				String gender = male.isChecked()?"男":"女";
 				String phoneNumStr = phoneNum.getText().toString().trim();
 				String emailStr = email.getText().toString().trim();
 				String birthdayStr = birthday.getText().toString().trim();
@@ -159,7 +159,7 @@ public class RegisterActivity extends Activity {
 						editor.putString("account", accountStr);
 						editor.putString("password", passwordStr);
 						editor.putString("rePassword", rePasswordStr);
-						editor.putString("gendar", gendar);
+						editor.putString("gender", gender);
 						editor.putString("phoneNum", phoneNumStr);
 						editor.putString("email", emailStr);
 						editor.putString("birthday", birthdayStr);

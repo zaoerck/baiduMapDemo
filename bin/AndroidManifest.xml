@@ -42,9 +42,13 @@
             android:label="@string/title_activity_login" >
         </activity>
         <activity
-            android:windowSoftInputMode="adjustResize|stateHidden"
             android:name="edu.hhu.zaoerck.baiduMap.RegisterActivity"
-            android:label="@string/title_activity_register" >
+            android:label="@string/title_activity_register"
+            android:windowSoftInputMode="adjustResize|stateHidden" >
+        </activity>
+        <activity
+            android:name="edu.hhu.zaoerck.baiduMap.MapActivity"
+            android:label="@string/title_activity_map" >
         </activity>
     </application>
 
