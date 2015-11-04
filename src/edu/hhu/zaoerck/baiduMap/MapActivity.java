@@ -5,7 +5,12 @@ import com.baidu.mapapi.map.MapView;
 
 import android.os.Bundle;
 import android.app.Activity;
+import android.graphics.drawable.ScaleDrawable;
+import android.view.ScaleGestureDetector;
+import android.view.View;
 import android.view.Window;
+import android.view.animation.ScaleAnimation;
+import android.widget.ZoomControls;
 
 public class MapActivity extends Activity {
 	
@@ -22,7 +27,29 @@ public class MapActivity extends Activity {
         setContentView(R.layout.map);
       //获取地图控件引用  
         mMapView = (MapView) findViewById(R.id.bmapView);
+        //移除百度logo
+        mMapView.removeViewAt(1);
+        //隐藏缩放控件
+        hideZoomControls();
+        //隐藏比例尺
+        mMapView.removeViewAt(2);
 	}
+	
+	//隐藏缩放控件
+	protected void hideZoomControls(){
+		int childCount = mMapView.getChildCount();
+		View zoom = null;
+		for (int i = 0; i < childCount; i++) {
+			View child = mMapView.getChildAt(i);
+			if (child instanceof ZoomControls) {
+				zoom = child;
+				break;
+			}
+		}
+		zoom.setVisibility(View.GONE);
+	}
+	
+	
 	
 	@Override  
     protected void onDestroy() {  
