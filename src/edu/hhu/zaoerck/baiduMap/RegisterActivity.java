@@ -170,6 +170,7 @@ public class RegisterActivity extends Activity {
 						//提交存储信息并提示
 						editor.commit();
 						Toast.makeText(RegisterActivity.this, "注册成功", Toast.LENGTH_LONG).show();
+						finish();
 					}
 				
 				}

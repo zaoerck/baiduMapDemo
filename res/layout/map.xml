@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
@@ -9,5 +9,22 @@
 	    android:layout_width="fill_parent"  
 	    android:layout_height="fill_parent"  
 	    android:clickable="true" />
+    
+	<ImageView
+        android:id="@+id/trafficImageViewId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="5sp"
+        android:paddingTop="5sp"
+        android:src="@drawable/traffic" />
+	
+	<ImageView
+        android:id="@+id/staImageViewId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/trafficImageViewId"
+        android:paddingLeft="5sp"
+        android:paddingTop="5sp"
+        android:src="@drawable/sta" />
 
-</LinearLayout>
+</RelativeLayout>

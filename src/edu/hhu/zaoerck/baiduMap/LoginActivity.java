@@ -129,6 +129,7 @@ public class LoginActivity extends Activity {
 			//TODO 要写进入地图页面
 			Intent intent = new Intent(LoginActivity.this,MapActivity.class);
 			startActivity(intent);
+			finish();
 			return;
 		}
 		else {

@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+    
+
+    <LinearLayout
+        android:id="@+id/nameA"
+        android:visibility="visible"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:layout_width="50sp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="城市A:"
+            android:textSize="15sp" />
+
+        <EditText
+            android:id="@+id/cityA"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:hint="请输入城市" />
+    </LinearLayout>
+    
+    <LinearLayout
+        android:id="@+id/nameB"
+        android:visibility="visible"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:layout_width="50sp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="城市B:"
+            android:textSize="15sp" />
+
+        <EditText
+            android:id="@+id/cityB"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:hint="请输入城市" />
+    </LinearLayout>
+    
+    <LinearLayout
+        android:id="@+id/positionA"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" 
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="50sp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="位置A:"
+            android:textSize="15sp" />
+
+        <!-- 位置A的经度 -->
+        <EditText
+            android:id="@+id/longitude_placeA"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="请输入经度" />
+        
+        <!-- 位置A的纬度 -->
+        <EditText
+            android:id="@+id/latitude_placeA"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:hint="请输入维度" />
+    </LinearLayout>
+    
+    <LinearLayout
+        android:id="@+id/positionB"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:layout_width="50sp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="位置B:"
+            android:textSize="15sp" />
+
+        <!-- 位置B的经度 -->
+        <EditText
+            android:id="@+id/longitude_placeB"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="请输入经度" />
+        
+        <!-- 位置B的纬度 -->
+        <EditText
+            android:id="@+id/latitude_placeB"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:hint="请输入维度" />
+    </LinearLayout>
+    
+    	
+    <LinearLayout 
+        android:id="@+id/condition"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_gravity="center_horizontal"
+        android:orientation="horizontal">
+        
+        <CheckBox 
+            android:id="@+id/withCityName"
+            android:text="用城市名查询"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:checked="true"/>
+        <CheckBox 
+            android:id="@+id/withPosition"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="用经纬度查询"
+            android:textSize="15sp"/>
+    </LinearLayout>
+    
+</LinearLayout>
