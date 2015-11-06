@@ -50,6 +50,10 @@
             android:name="edu.hhu.zaoerck.baiduMap.MapActivity"
             android:label="@string/title_activity_map" >
         </activity>
+        <activity
+            android:name="edu.hhu.zaoerck.baiduMap.InfoActivity"
+            android:label="@string/title_activity_info" >
+        </activity>
     </application>
 
 </manifest>

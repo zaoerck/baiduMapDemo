@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="5dp"
+    android:orientation="vertical" >
+
+    <LinearLayout 
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        
+        <TextView 
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:text="用户信息"
+            android:textSize="25sp"
+            android:layout_marginTop="10dp"/>
+        
+        <ImageView 
+	        android:src="@drawable/ic_launcher"
+	        android:layout_width="100dp"
+	        android:layout_height="100dp"
+	        android:layout_gravity="center_horizontal"/>
+        
+        <LinearLayout 
+            android:layout_width="match_parent"
+        	android:layout_height="wrap_content"
+        	android:layout_marginTop="5dp"
+        	android:orientation="horizontal">
+            
+            <TextView 
+            	android:layout_width="wrap_content"
+            	android:layout_height="wrap_content"
+            	android:text="账号:"
+            	android:textSize="20sp"/>
+            
+            <TextView
+                android:id="@+id/account" 
+            	android:layout_width="match_parent"
+            	android:layout_height="wrap_content"
+            	android:layout_marginLeft="2dp"
+            	android:textSize="20sp"/>
+        </LinearLayout>
+    	
+        <LinearLayout 
+        	android:layout_width="match_parent"
+        	android:layout_height="wrap_content"
+       		android:layout_marginTop="5dp"
+        	android:orientation="horizontal">
+        
+        	<TextView 
+            	android:layout_width="wrap_content"
+            	android:layout_height="wrap_content"
+            	android:text="性别:"
+            	android:textSize="20sp"/>
+        	<TextView 
+        	    android:id="@+id/gender"
+            	android:layout_width="match_parent"
+            	android:layout_height="wrap_content"
+            	android:layout_marginLeft="2dp"
+            	android:textSize="20sp"/>
+            
+            	
+    	</LinearLayout>
+    
+    	<LinearLayout 
+        	android:layout_width="match_parent"
+        	android:layout_height="wrap_content"
+        	android:layout_marginTop="5dp"
+        	android:orientation="horizontal">
+        
+        	<TextView 
+            	android:layout_width="wrap_content"
+            	android:layout_height="wrap_content"
+            	android:text="手机:"
+            	android:textSize="20sp"/>
+        	<TextView
+        	    android:id="@+id/phoneNum" 
+            	android:layout_width="match_parent"
+            	android:layout_height="wrap_content"
+            	android:layout_marginLeft="2dp"
+            	android:textSize="20sp"/>
+    	</LinearLayout>
+    
+    	<LinearLayout 
+        	android:layout_width="match_parent"
+        	android:layout_height="wrap_content"
+        	android:layout_marginTop="5dp"
+        	android:orientation="horizontal">
+        
+        	<TextView 
+            	android:layout_width="wrap_content"
+            	android:layout_height="wrap_content"
+            	android:text="邮件:"
+            	android:textSize="20sp"/>
+        	<TextView 
+        	    android:id="@+id/email"
+            	android:layout_width="match_parent"
+            	android:layout_height="wrap_content"
+            	android:layout_marginLeft="2dp"
+            	android:textSize="20sp"/>
+    		</LinearLayout>
+    
+    	<LinearLayout 
+        	android:layout_width="match_parent"
+        	android:layout_height="wrap_content"
+	        android:layout_marginTop="5dp"
+	        android:orientation="horizontal">
+        
+	        <TextView 
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:text="生日:"
+	            android:textSize="20sp"/>
+	        <TextView 
+	            android:id="@+id/birthdate"
+	            android:layout_width="match_parent"
+	            android:layout_height="wrap_content"
+	            android:layout_marginLeft="2dp"
+	            android:textSize="20sp"/>
+	    </LinearLayout>
+    
+	    <LinearLayout 
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_marginTop="5dp"
+	        android:orientation="horizontal">
+	        
+	        <TextView 
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:text="籍贯:"
+	            android:textSize="20sp"/>
+	        <TextView 
+	            android:id="@+id/birthAddress"
+	            android:layout_width="match_parent"
+	            android:layout_height="wrap_content"
+	            android:layout_marginLeft="2dp"
+	            android:textSize="20sp"/>
+	    </LinearLayout>
+	    
+	    <LinearLayout 
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_marginTop="5dp"
+	        android:orientation="horizontal">
+	        
+	        <TextView 
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:text="兴趣:"
+	            android:textSize="20sp"/>
+	        <TextView 
+    			android:layout_width="match_parent"
+    			android:layout_height="wrap_content"
+    			android:id="@+id/interest"
+    			android:textSize="20sp"/>
+	    </LinearLayout>
+	    
+	        
+	    <TextView 
+	    	android:layout_width="wrap_content"
+	    	android:layout_height="wrap_content"
+	    	android:text="自我介绍:"
+	    	android:textSize="20sp"/>
+	        
+		<EditText 
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:minLines="4"
+	        android:id="@+id/introduction"
+	        android:gravity="top"
+	        android:focusable="false"
+	        android:editable="false"
+	        android:background="@android:drawable/editbox_background"/>
+	   
+    </LinearLayout>
+    
+
+</LinearLayout>

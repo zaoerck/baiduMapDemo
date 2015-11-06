@@ -1,11 +1,15 @@
 package edu.hhu.zaoerck.baiduMap;
 
+import java.text.DecimalFormat;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -19,7 +23,6 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RadioButton;
 import android.widget.Toast;
 import android.widget.ZoomControls;
 
@@ -34,6 +37,7 @@ import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.MarkerOptions;
 import com.baidu.mapapi.map.OverlayOptions;
 import com.baidu.mapapi.model.LatLng;
+import com.baidu.mapapi.utils.DistanceUtil;
 
 public class MapActivity extends Activity implements OnClickListener,
 		OnMenuItemClickListener {
@@ -44,6 +48,8 @@ public class MapActivity extends Activity implements OnClickListener,
 	private ImageView trafficImageView;
 	private ImageView staImageView;
 	private int currentZoom = 8;
+	private SharedPreferences sp;
+	private Editor editor;
 	
 
 	@Override
@@ -87,13 +93,15 @@ public class MapActivity extends Activity implements OnClickListener,
 		// 隐藏缩放控件
 		hideZoomControls();
 		// 隐藏比例尺
-		mapView.removeViewAt(2);
+//		mapView.removeViewAt(2);
 		// View child = mMapView.getChildAt(1);
 		// // 隐藏百度logo和缩放控件ZoomControl
 		// if (child instanceof ImageView || child instanceof ZoomControls ) {
 		// child.setVisibility(View.INVISIBLE);
 		// }
 		baiduMap = mapView.getMap();
+		sp = getSharedPreferences("cityLocation", Context.MODE_PRIVATE);
+		editor = sp.edit();
 		
 	}
 
@@ -195,7 +203,27 @@ public class MapActivity extends Activity implements OnClickListener,
 				public void onClick(DialogInterface dialog, int which) {
 					String cityString = cityEditText.getText().toString().trim();
 					//TODO 判断城市的经纬度
-					Toast.makeText(MapActivity.this, "还没写的城市经纬度判断", Toast.LENGTH_LONG).show();
+					location();
+					String cityStringFromSp = sp.getString(cityString, "");
+					if(cityStringFromSp.equals("")){
+						Toast.makeText(MapActivity.this, "暂不支持查询该城市", Toast.LENGTH_LONG).show();
+						return;
+					}
+					else {
+						String position[] = cityStringFromSp.split(",");
+						double latitude = Double.parseDouble(position[1]);
+						double longtitude = Double.parseDouble(position[0]);
+						LatLng point = new LatLng(latitude, longtitude);
+						BitmapDescriptor bitmap = BitmapDescriptorFactory
+								.fromResource(R.drawable.mark);
+						OverlayOptions option = new MarkerOptions()
+								.position(point).icon(bitmap);
+						baiduMap.addOverlay(option);
+						baiduMap.setMapStatus(MapStatusUpdateFactory
+								.newMapStatus(new MapStatus.Builder()
+										.target(point).zoom(currentZoom)
+										.build()));
+					}
 				}
 			});
 			builder.setNegativeButton("取消", null);
@@ -275,8 +303,54 @@ public class MapActivity extends Activity implements OnClickListener,
 					String longitude_placeA = longitude_placeAEditText.getText().toString().trim();
 					String latitude_placeA = latitude_placeAEditText.getText().toString().trim();
 					String longitude_placeB = longitude_placeBEditText.getText().toString().trim();
+					String laitude_placeB = latitude_placeBEditText.getText().toString().trim();
+					if(withPosition.isChecked()){
+						double longtitudeA, longtitudeB, latitudeA,latitudeB;
+						try{
+							longtitudeA = Double.parseDouble(longitude_placeA);
+							latitudeA = Double.parseDouble(latitude_placeA);
+							longtitudeB = Double.parseDouble(longitude_placeB);
+							latitudeB = Double.parseDouble(laitude_placeB);
+
+						}catch(NumberFormatException e){
+							Toast.makeText(MapActivity.this, "请输入正确经纬度", Toast.LENGTH_LONG).show();
+						    return;
+						}
+						LatLng point1 = new LatLng(longtitudeA, latitudeA);
+						LatLng point2 = new LatLng(longtitudeB, latitudeB);
+						DecimalFormat df = new DecimalFormat("######0.00"); 
+						double distance = DistanceUtil. getDistance(point1, point2)/1000;
+						
+						Toast.makeText(MapActivity.this, "距离为" + df.format(distance) + "公里", Toast.LENGTH_LONG).show();
+						return;
+					}
+					else if (withCityName.isChecked()) {
+						//TODO asdf
+						String cityAStringFromSp = sp.getString(cityAString, "");
+						String cityBStringFromSp = sp.getString(cityBString, "");
+						if(cityAStringFromSp.equals("") || cityBStringFromSp.equals("")){
+							Toast.makeText(MapActivity.this, "暂不支持查询该城市", Toast.LENGTH_LONG).show();
+							return;
+						}
+						else{
+							String positionA[] = cityAStringFromSp.split(",");
+							double latitudeA = Double.parseDouble(positionA[1]);
+							double longtitudeA = Double.parseDouble(positionA[0]);
+							LatLng pointA = new LatLng(latitudeA, longtitudeA);
+							
+							String positionB[] = cityBStringFromSp.split(",");
+							double latitudeB = Double.parseDouble(positionB[1]);
+							double longtitudeB = Double.parseDouble(positionB[0]);
+							LatLng pointB = new LatLng(latitudeB, longtitudeB);
+							
+							DecimalFormat df = new DecimalFormat("######0.00"); 
+							double distance = DistanceUtil. getDistance(pointA, pointB)/1000;
+							Toast.makeText(MapActivity.this, "距离为" + df.format(distance) + "公里", Toast.LENGTH_LONG).show();
+							return;
+						}
+					}
 					
-					Toast.makeText(MapActivity.this, "还没写的公里数计算", Toast.LENGTH_LONG).show();
+					
 				}
 			});
 			builder.setNegativeButton("取消", null);
@@ -286,8 +360,11 @@ public class MapActivity extends Activity implements OnClickListener,
 			break;
 		case 4:
 			//TODO 当前用户信息
+			Intent intent = new Intent(MapActivity.this,InfoActivity.class);
+			startActivity(intent);
 			break;
 		case 5:
+			
 			baiduMap.clear();
 			break;
 		case 6:
@@ -347,6 +424,32 @@ public class MapActivity extends Activity implements OnClickListener,
 		default:
 			break;
 		}
+	}
+	
+	private void location(){
+		//TODO 将地理信息写入xml中
+		editor.putString("北京","116.41667,39.91667");
+		editor.putString("Beijing","116.41667,39.91667");
+		editor.putString("上海","121.48023,31.23630");
+		editor.putString("Shanghai","121.43333,34.50000");
+		editor.putString("天津","117.20000,39.13333");
+		editor.putString("Tianjin","117.20000,39.13333");
+		editor.putString("香港","114.10000,22.20000");
+		editor.putString("广州","113.23333,23.16667");
+		editor.putString("Guangzhou","113.23333,23.16667");
+		editor.putString("珠海","113.51667,22.30000");
+		editor.putString("Zhuhai","113.51667,22.30000");
+		editor.putString("深圳","114.06667,22.61667");
+		editor.putString("Shenzhen","114.06667,22.61667");
+		editor.putString("杭州","120.20000,30.26667");
+		editor.putString("Hangzhou","120.20000,30.26667");
+		editor.putString("重庆","106.45000,29.56667");
+		editor.putString("Chongqin","106.45000,29.56667");
+		editor.putString("南京","118.78333,32.05000");
+		editor.putString("Nanjing","118.78333,32.05000");
+		editor.putString("南昌","115.90000,28.68333");
+		editor.putString("Nanchang","115.90000,28.68333");
+		editor.commit();
 	}
 	
 	@Override

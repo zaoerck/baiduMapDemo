@@ -73,7 +73,7 @@
             android:id="@+id/latitude_placeA"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:hint="请输入维度" />
+            android:hint="请输入纬度" />
     </LinearLayout>
     
     <LinearLayout
