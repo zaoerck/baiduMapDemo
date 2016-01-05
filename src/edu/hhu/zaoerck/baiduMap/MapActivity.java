@@ -24,10 +24,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RadioGroup;
-import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.Toast;
 import android.widget.ZoomControls;
 
@@ -71,9 +68,9 @@ public class MapActivity extends Activity implements OnMenuItemClickListener, On
 	private double latitude;// 维度
 	private float radius;// 定位精度半径，单位是米
 	private String addrStr;// 反地理编码
-	private String province;// 省份信息
-	private String city;// 城市信息
-	private String district;// 区县信息
+//	private String province;// 省份信息
+//	private String city;// 城市信息
+//	private String district;// 区县信息
 	private float direction;// 手机方向信息
 
 	private int locType;
@@ -173,7 +170,9 @@ public class MapActivity extends Activity implements OnMenuItemClickListener, On
 				return;
 			}
 			locType = location.getLocType();
-			Toast.makeText(MapActivity.this, "当前定位的返回值是："+locType, Toast.LENGTH_SHORT).show();
+			
+//			调试时使用
+//			Toast.makeText(MapActivity.this, "当前定位的返回值是："+locType, Toast.LENGTH_SHORT).show();
 			longitude = location.getLongitude();
 			latitude = location.getLatitude();
 			if (location.hasRadius()) {// 判断是否有定位精度半径
@@ -191,12 +190,13 @@ public class MapActivity extends Activity implements OnMenuItemClickListener, On
 						Toast.LENGTH_SHORT).show();
 			}
 			direction = location.getDirection();// 获取手机方向，【0~360°】,手机上面正面朝北为0°
-			province = location.getProvince();// 省份
-			city = location.getCity();// 城市
-			district = location.getDistrict();// 区县
-			Toast.makeText(MapActivity.this,
-					province + "~" + city + "~" + district, Toast.LENGTH_SHORT)
-					.show();
+//			获取省市区
+//			province = location.getProvince();// 省份
+//			city = location.getCity();// 城市
+//			district = location.getDistrict();// 区县
+//			Toast.makeText(MapActivity.this,
+//					province + "~" + city + "~" + district, Toast.LENGTH_SHORT)
+//					.show();
 			// 构造定位数据
 			MyLocationData locData = new MyLocationData.Builder()
 					.accuracy(radius)//
@@ -216,7 +216,7 @@ public class MapActivity extends Activity implements OnMenuItemClickListener, On
 	
 	/**
 	 * 位置提醒监听器
-	 * @author ys
+	 * 
 	 *
 	 */
 	class MyNotifyListener extends BDNotifyListener {
@@ -250,6 +250,13 @@ public class MapActivity extends Activity implements OnMenuItemClickListener, On
 					currentMode, true, currentMarker));
 			break;
 		}
+	}
+	
+	public void relocate(View v){
+		//点击重新定位
+		locationClient.stop();
+		locationClient.start();
+		
 	}
 
 	private void initComponents() {
@@ -406,7 +413,6 @@ public class MapActivity extends Activity implements OnMenuItemClickListener, On
 			final CheckBox withCityName = (CheckBox)countDistanceView.findViewById(R.id.withCityName);
 			final CheckBox withPosition = (CheckBox)countDistanceView.findViewById(R.id.withPosition);
 			
-			String latitude_placeB = latitude_placeBEditText.getText().toString().trim();
 			
 			withCityName.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 				

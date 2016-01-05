@@ -27,6 +27,7 @@
         android:layout_below="@+id/locate_btn"
         android:layout_marginTop="25dp"
         android:background="@drawable/btn_default"
-        android:text="定位" />
+        android:text="定位" 
+        android:onClick="relocate"/>
 
 </RelativeLayout>
