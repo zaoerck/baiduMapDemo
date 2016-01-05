@@ -609,9 +609,10 @@ public class MapActivity extends Activity implements OnMenuItemClickListener, On
 		mapView.onDestroy();
 		
 		baiduMap.setMyLocationEnabled(false);
-		mapView.onDestroy();
-		mapView = null;
-		super.onDestroy();
+		locationClient.unRegisterLocationListener(locationListener);
+		//取消位置提醒
+		locationClient.removeNotifyEvent(notifyListener);
+		locationClient.stop();
 	}
 
 	@Override
