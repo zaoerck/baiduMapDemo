@@ -33,6 +33,7 @@ public class LoginActivity extends Activity {
 		setContentView(R.layout.login);
 		init();
 		addAction();
+		
 	}
 	
 	private void addAction(){

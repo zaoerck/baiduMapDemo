@@ -91,19 +91,22 @@
             android:id="@+id/login" 
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@android:drawable/editbox_background"
+            android:background="@drawable/btn_default"
             android:text="登录"
-            android:onClick="login"
-            android:textSize="20sp"/>
+            android:textColor="@color/text_color"
+            android:textSize="15sp"
+            android:onClick="login"/>
         <Button 
             android:id="@+id/register"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
-            android:background="@android:drawable/editbox_background"
+            android:background="@drawable/btn_default"
             android:text="注册"
-            android:textSize="20sp"
+            android:textColor="@color/text_color"
+            android:textSize="15sp"
             android:onClick="register"/>
+        
     </LinearLayout>
 
 </LinearLayout>

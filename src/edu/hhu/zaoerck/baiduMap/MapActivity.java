@@ -4,12 +4,14 @@ import java.text.DecimalFormat;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Service;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -18,14 +20,23 @@ import android.view.Window;
 import android.view.MenuItem.OnMenuItemClickListener;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RadioGroup;
+import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.Toast;
 import android.widget.ZoomControls;
 
+import com.baidu.location.BDLocation;
+import com.baidu.location.BDLocationListener;
+import com.baidu.location.BDNotifyListener;
+import com.baidu.location.LocationClient;
+import com.baidu.location.LocationClientOption;
+import com.baidu.location.LocationClientOption.LocationMode;
 import com.baidu.mapapi.SDKInitializer;
 import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.BitmapDescriptor;
@@ -35,21 +46,49 @@ import com.baidu.mapapi.map.MapStatusUpdate;
 import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.MarkerOptions;
+import com.baidu.mapapi.map.MyLocationConfiguration;
+import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.map.OverlayOptions;
 import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.utils.DistanceUtil;
 
-public class MapActivity extends Activity implements OnClickListener,
-		OnMenuItemClickListener {
+public class MapActivity extends Activity implements OnMenuItemClickListener, OnClickListener {
 
 	private MapView mapView;
 	private BaiduMap baiduMap;
 	private Context context;
-	private ImageView trafficImageView;
-	private ImageView staImageView;
 	private int currentZoom = 8;
 	private SharedPreferences sp;
 	private Editor editor;
+	
+	
+	
+	private LocationClient locationClient;
+	private BDLocationListener locationListener;
+	private BDNotifyListener notifyListener;
+
+	private double longitude;// 精度
+	private double latitude;// 维度
+	private float radius;// 定位精度半径，单位是米
+	private String addrStr;// 反地理编码
+	private String province;// 省份信息
+	private String city;// 城市信息
+	private String district;// 区县信息
+	private float direction;// 手机方向信息
+
+	private int locType;
+
+	// 定位按钮
+	private Button locateBtn;
+	// 定位模式 （普通-跟随-罗盘）
+	private MyLocationConfiguration.LocationMode currentMode;
+	// 定位图标描述
+	private BitmapDescriptor currentMarker = null;
+	// 记录是否第一次定位
+	private boolean isFirstLoc = true;
+	
+	//振动器设备
+	private Vibrator mVibrator;
 	
 
 	@Override
@@ -61,55 +100,172 @@ public class MapActivity extends Activity implements OnClickListener,
 		// 注意该方法要再setContentView方法之前实现
 		SDKInitializer.initialize(getApplicationContext());
 		setContentView(R.layout.map);
+		// 地图初始化
 		initComponents();
-		addActions();
 
-		// 设置中心点坐标
-		LatLng point = new LatLng(0, 0);
-		BitmapDescriptor bitmap = BitmapDescriptorFactory
-				.fromResource(R.drawable.mark);
-		// 构建MarkerOption，用于在地图上添加Marker
-		OverlayOptions option = new MarkerOptions().position(point)
-				.icon(bitmap);
-		// 定义地图状态
-		MapStatus mMapStatus = new MapStatus.Builder().target(point).zoom(12)
-				.build();
-		// 在地图上添加Marker，并显示
-		baiduMap.addOverlay(option);
-		// 定义
-		MapStatusUpdate mapStatusUpdate = MapStatusUpdateFactory
-				.newMapStatus(mMapStatus);
-		baiduMap.setMapStatus(mapStatusUpdate);
+		locateBtn = (Button) findViewById(R.id.locate_btn);
+		locateBtn.setOnClickListener(this);
+		currentMode = MyLocationConfiguration.LocationMode.NORMAL;
+		locateBtn.setText("普通");
+		mVibrator =(Vibrator)getApplicationContext().getSystemService(Service.VIBRATOR_SERVICE);
+		init();
+//		// 设置中心点坐标
+//		LatLng point = new LatLng(0, 0);
+//		BitmapDescriptor bitmap = BitmapDescriptorFactory
+//				.fromResource(R.drawable.mark);
+//		// 构建MarkerOption，用于在地图上添加Marker
+//		OverlayOptions option = new MarkerOptions().position(point)
+//				.icon(bitmap);
+//		// 定义地图状态
+//		MapStatus mMapStatus = new MapStatus.Builder().target(point).zoom(12)
+//				.build();
+//		// 在地图上添加Marker，并显示
+//		baiduMap.addOverlay(option);
+//		// 定义
+//		MapStatusUpdate mapStatusUpdate = MapStatusUpdateFactory
+//				.newMapStatus(mMapStatus);
+//		baiduMap.setMapStatus(mapStatusUpdate);
+	}
+	
+	private void init() {
+		baiduMap.setMyLocationEnabled(true);
+		// 1. 初始化LocationClient类
+		locationClient = new LocationClient(getApplicationContext());
+		// 2. 声明LocationListener类
+		locationListener = new MyLocationListener();
+		// 3. 注册监听函数
+		locationClient.registerLocationListener(locationListener);
+		// 4. 设置参数
+		LocationClientOption locOption = new LocationClientOption();
+//		locOption.setLocationMode(com.baidu.location.LocationClientOption.LocationMode.Hight_Accuracy);
+		locOption.setLocationMode(LocationMode.Hight_Accuracy);// 设置定位模式
+		locOption.setCoorType("bd09ll");// 设置定位结果类型
+//		locOption.setScanSpan(5000);// 设置发起定位请求的间隔时间,ms
+		locOption.setIsNeedAddress(true);// 返回的定位结果包含地址信息
+		locOption.setNeedDeviceDirect(true);// 设置返回结果包含手机的方向
+
+		locationClient.setLocOption(locOption);
+		// 5. 注册位置提醒监听事件
+		notifyListener = new MyNotifyListener();
+		notifyListener.SetNotifyLocation(longitude, latitude, 3000, "bd09ll");//精度，维度，范围，坐标类型
+		locationClient.registerNotify(notifyListener);
+		// 6. 开启/关闭 定位SDK
+		locationClient.start();
+		// locationClient.stop();
+		// 发起定位，异步获取当前位置，因为是异步的，所以立即返回，不会引起阻塞
+		// 定位的结果在ReceiveListener的方法onReceive方法的参数中返回。
+		// 当定位SDK从定位依据判定，位置和上一次没发生变化，而且上一次定位结果可用时，则不会发生网络请求，而是返回上一次的定位结果。
+		// 返回值，0：正常发起了定位 1：service没有启动 2：没有监听函数
+		// 6：两次请求时间太短（前后两次请求定位时间间隔不能小于1000ms）
+		/*
+		 * if (locationClient != null && locationClient.isStarted()) {
+		 * requestResult = locationClient.requestLocation(); } else {
+		 * Log.d("LocSDK5", "locClient is null or not started"); }
+		 */
+
+	}
+	
+	class MyLocationListener implements BDLocationListener {
+		// 异步返回的定位结果
+		@Override
+		public void onReceiveLocation(BDLocation location) {
+			if (location == null) {
+				return;
+			}
+			locType = location.getLocType();
+			Toast.makeText(MapActivity.this, "当前定位的返回值是："+locType, Toast.LENGTH_SHORT).show();
+			longitude = location.getLongitude();
+			latitude = location.getLatitude();
+			if (location.hasRadius()) {// 判断是否有定位精度半径
+				radius = location.getRadius();
+			}
+			if (locType == BDLocation.TypeGpsLocation) {//
+				Toast.makeText(
+						MapActivity.this,
+						"当前速度是：" + location.getSpeed() + "~~定位使用卫星数量："
+								+ location.getSatelliteNumber(),
+						Toast.LENGTH_SHORT).show();
+			} else if (locType == BDLocation.TypeNetWorkLocation) {
+				addrStr = location.getAddrStr();// 获取反地理编码(文字描述的地址)
+				Toast.makeText(MapActivity.this, addrStr,
+						Toast.LENGTH_SHORT).show();
+			}
+			direction = location.getDirection();// 获取手机方向，【0~360°】,手机上面正面朝北为0°
+			province = location.getProvince();// 省份
+			city = location.getCity();// 城市
+			district = location.getDistrict();// 区县
+			Toast.makeText(MapActivity.this,
+					province + "~" + city + "~" + district, Toast.LENGTH_SHORT)
+					.show();
+			// 构造定位数据
+			MyLocationData locData = new MyLocationData.Builder()
+					.accuracy(radius)//
+					.direction(direction)// 方向
+					.latitude(latitude)//
+					.longitude(longitude)//
+					.build();
+			// 设置定位数据
+			baiduMap.setMyLocationData(locData);
+			LatLng ll = new LatLng(latitude, longitude);
+			float f = baiduMap.getMaxZoomLevel();
+			MapStatusUpdate msu = MapStatusUpdateFactory.newLatLngZoom(ll, f-3);
+			baiduMap.animateMapStatus(msu);
+
+		}
+	}
+	
+	/**
+	 * 位置提醒监听器
+	 * @author ys
+	 *
+	 */
+	class MyNotifyListener extends BDNotifyListener {
+		@Override
+		public void onNotify(BDLocation bdLocation, float distance) {
+			super.onNotify(bdLocation, distance);
+			mVibrator.vibrate(1000);//振动提醒已到设定位置附近
+	    	Toast.makeText(MapActivity.this, "震动提醒", Toast.LENGTH_SHORT).show();
+		}
+	}
+
+	@Override
+	public void onClick(View v) {
+		switch (v.getId()) {
+		case R.id.locate_btn:// 定位
+			switch (currentMode) {
+			case NORMAL:
+				locateBtn.setText("跟随");
+				currentMode = MyLocationConfiguration.LocationMode.FOLLOWING;
+				break;
+			case FOLLOWING:
+				locateBtn.setText("罗盘");
+				currentMode = MyLocationConfiguration.LocationMode.COMPASS;
+				break;
+			case COMPASS:
+				locateBtn.setText("普通");
+				currentMode = MyLocationConfiguration.LocationMode.NORMAL;
+				break;
+			}
+			baiduMap.setMyLocationConfigeration(new MyLocationConfiguration(
+					currentMode, true, currentMarker));
+			break;
+		}
 	}
 
 	private void initComponents() {
 		context = MapActivity.this;
 		// 获取地图控件引用
 		mapView = (MapView) findViewById(R.id.bmapView);
-		trafficImageView = (ImageView) findViewById(R.id.trafficImageViewId);
-		staImageView = (ImageView) findViewById(R.id.staImageViewId);
 		// 移除百度logo
 		mapView.removeViewAt(1);
 		// 隐藏缩放控件
 		hideZoomControls();
-		// 隐藏比例尺
-//		mapView.removeViewAt(2);
-		// View child = mMapView.getChildAt(1);
-		// // 隐藏百度logo和缩放控件ZoomControl
-		// if (child instanceof ImageView || child instanceof ZoomControls ) {
-		// child.setVisibility(View.INVISIBLE);
-		// }
 		baiduMap = mapView.getMap();
 		sp = getSharedPreferences("cityLocation", Context.MODE_PRIVATE);
 		editor = sp.edit();
 		
 	}
 
-	private void addActions() {
-		trafficImageView.setOnClickListener(this);
-		staImageView.setOnClickListener(this);
-		
-	}
 
 	// 隐藏缩放控件
 	protected void hideZoomControls() {
@@ -135,7 +291,8 @@ public class MapActivity extends Activity implements OnClickListener,
 		menu.add(3, 3, 3, "公里数计算").setOnMenuItemClickListener(this);
 		menu.add(4, 4, 4, "当前用户信息").setOnMenuItemClickListener(this);
 		menu.add(5, 5, 5, "清除屏幕").setOnMenuItemClickListener(this);
-		menu.add(6, 6, 6, "退出").setOnMenuItemClickListener(this);
+		menu.add(6, 6, 6, "关于").setOnMenuItemClickListener(this);
+		menu.add(7, 7, 7, "退出").setOnMenuItemClickListener(this);
 		return super.onCreateOptionsMenu(menu);
 	}
 
@@ -368,6 +525,11 @@ public class MapActivity extends Activity implements OnClickListener,
 			baiduMap.clear();
 			break;
 		case 6:
+			//TODO 当前用户信息
+			Intent intent_about = new Intent(MapActivity.this,AboutActivity.class);
+			startActivity(intent_about);
+			break;
+		case 7:
 			builder.setIcon(R.drawable.ic_launcher);
 			builder.setTitle("退出提醒");
 			builder.setMessage("你确认退出吗？");
@@ -410,21 +572,7 @@ public class MapActivity extends Activity implements OnClickListener,
 		}
 	}
 
-	@Override
-	public void onClick(View v) {
-		// TODO Auto-generated method stub
-		int id = v.getId();
-		switch (id) {
-		case R.id.trafficImageViewId:
-			baiduMap.setMapType(BaiduMap.MAP_TYPE_NORMAL);
-			break;
-		case R.id.staImageViewId:
-			baiduMap.setMapType(BaiduMap.MAP_TYPE_SATELLITE);
-			break;
-		default:
-			break;
-		}
-	}
+	
 	
 	private void location(){
 		//TODO 将地理信息写入xml中
@@ -452,24 +600,31 @@ public class MapActivity extends Activity implements OnClickListener,
 		editor.commit();
 	}
 	
+	
+	
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		// 在activity执行onDestroy时执行mMapView.onDestroy()，实现地图生命周期管理
+		// 在activity执行onDestroy时执行mapView.onDestroy()，实现地图生命周期管理
 		mapView.onDestroy();
+		
+		baiduMap.setMyLocationEnabled(false);
+		mapView.onDestroy();
+		mapView = null;
+		super.onDestroy();
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-		// 在activity执行onResume时执行mMapView. onResume ()，实现地图生命周期管理
+		// 在activity执行onResume时执行mapView. onResume ()，实现地图生命周期管理
 		mapView.onResume();
 	}
 
 	@Override
 	protected void onPause() {
 		super.onPause();
-		// 在activity执行onPause时执行mMapView. onPause ()，实现地图生命周期管理
+		// 在activity执行onPause时执行mapView. onPause ()，实现地图生命周期管理
 		mapView.onPause();
 	}
 }
