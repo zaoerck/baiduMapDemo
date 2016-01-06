@@ -43,7 +43,8 @@
             android:background="@drawable/btn_default"
             android:text="检查更新"
             android:textColor="@color/text_color"
-            android:textSize="15sp" />
+            android:textSize="15sp"
+            android:onClick="checkUpdate" />
 
         <Button
             android:id="@+id/about_btn_introduction"
@@ -53,7 +54,8 @@
             android:background="@drawable/btn_default"
             android:text="版本介绍"
             android:textColor="@color/text_color"
-            android:textSize="15sp" />
+            android:textSize="15sp"
+            android:onClick="about" />
 
         <Button
             android:id="@+id/about_btn_go_official_website"
@@ -63,7 +65,8 @@
             android:background="@drawable/btn_default"
             android:text="给易百度评分"
             android:textColor="@color/text_color"
-            android:textSize="15sp" />
+            android:textSize="15sp"
+            android:onClick="assess" />
     </LinearLayout>
 
     <LinearLayout
