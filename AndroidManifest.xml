@@ -86,6 +86,10 @@
             android:enabled="true"
             android:process=":remote" >
         </service>
+        
+        <uses-library android:name="android.test.runner"/>
     </application>
+    
+    <instrumentation android:name="android.test.InstrumentationTestRunner" android:targetPackage="edu.hhu.zaoerck.baiduMap" android:label="Test for my APP" />
 
 </manifest>
