@@ -27,8 +27,8 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 				"interest varchar(20)," +
 				"introduction text," +
 				"remAccountStatus varchar(20)," +
-				"remPasswordStatus varchar(20)" +
-				")";
+				"remPasswordStatus varchar(20)," +
+				"preLoginStatus varchar(20) )";
 		db.execSQL(sql);
 		
 	}

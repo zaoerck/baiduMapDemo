@@ -1,16 +1,18 @@
 package edu.hhu.zaoerck.baiduMap;
 
+import edu.hhu.zaoerck.baiduMap.service.UserService;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.view.Window;
 import android.widget.EditText;
 import android.widget.TextView;
 
 public class InfoActivity extends Activity {
 
-	private SharedPreferences sp;
+//	private SharedPreferences sp;
 	private TextView account;
 	private TextView gender;
 	private TextView phoneNum;
@@ -19,6 +21,7 @@ public class InfoActivity extends Activity {
 	private TextView address;
 	private EditText introduction;
 	private TextView interest;
+	UserService userService;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -31,7 +34,10 @@ public class InfoActivity extends Activity {
 	}
 	
 	private void init(){
-		sp = getSharedPreferences("baiduMap", Context.MODE_PRIVATE);
+		
+		
+//		sp = getSharedPreferences("baiduMap", Context.MODE_PRIVATE);
+		userService = new UserService(InfoActivity.this);
 		account = (TextView) findViewById(R.id.account);
 		gender = (TextView) findViewById(R.id.gender);
 		phoneNum = (TextView) findViewById(R.id.phoneNum);
@@ -41,23 +47,25 @@ public class InfoActivity extends Activity {
 		introduction = (EditText) findViewById(R.id.introduction);
 		interest = (TextView) findViewById(R.id.interest);
 		
-		String accountString = sp.getString("account", "");
-		String genderString = sp.getString("gender", "");
-		String phoneNumString = sp.getString("phoneNum", "0");
-		String emailString = sp.getString("email", "0");
-		String birthdayString = sp.getString("birthday", "0");
-		String addressString = sp.getString("address", "0");
-		String introductionString = sp.getString("introduction", "0");
-		String interestString = sp.getString("interest", "0");
+		String dataType = "preLoginStatus";
+		String value = "1";
+		String [] user = new String [12];
+		Cursor cursor = userService.getCursor(dataType, value);
+		if (cursor.moveToFirst() == true){
+			for(int i = 0; i < 12; i++){
+				user[i] = cursor.getString(i+1);
+			}
+			cursor.close();
+		}
 		
-		account.setText(accountString);
-		gender.setText(genderString);
-		phoneNum.setText(phoneNumString);
-		email.setText(emailString);
-		birthday.setText(birthdayString);
-		introduction.setText(introductionString);
-		interest.setText(interestString);
-		address.setText(addressString);
+		account.setText(user[0]);
+		gender.setText(user[2]);
+		birthday.setText(user[3]);
+		phoneNum.setText(user[4]);
+		email.setText(user[5]);
+		introduction.setText(user[8]);
+		interest.setText(user[7]);
+		address.setText(user[6]);
 	}
 
 }

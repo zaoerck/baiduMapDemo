@@ -15,12 +15,13 @@ public class User implements Serializable{
 	private String introduction;//介绍
 	private String remAccountStatus;
 	private String remPasswordStatus;
+	private String preLoginStatus;
 	public User() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	public User(String account, String password, String gender, String birthday, String phoneNum, 
-			String email, String address, String interest, String introduction, String remAccountStatus, String remPasswordStatus) {
+	public User(String account, String password, String gender, String birthday, String phoneNum, String email, String address, 
+			String interest, String introduction, String remAccountStatus, String remPasswordStatus, String preLoginStatus) {
 		super();
 		this.account = account;
 		this.password = password;
@@ -33,6 +34,7 @@ public class User implements Serializable{
 		this.introduction = introduction;
 		this.remAccountStatus = remAccountStatus;
 		this.remPasswordStatus = remPasswordStatus;
+		this.preLoginStatus = preLoginStatus;
 	}
 	public int getId() {
 		return id;
@@ -106,6 +108,12 @@ public class User implements Serializable{
 	public void setRemPasswordStatus(String remPasswordStatus) {
 		this.remPasswordStatus = remPasswordStatus;
 	}
+	public String getPreLoginStatus() {
+		return preLoginStatus;
+	}
+	public void setPreLoginStatus(String preLoginStatus) {
+		this.preLoginStatus = preLoginStatus;
+	}
 	@Override
 	public String toString() {
 		return "User [id=" + id + ", account=" + account + ", password="
@@ -113,8 +121,10 @@ public class User implements Serializable{
 				+ ", phoneNum=" + phoneNum + ", email=" + email + ", address="
 				+ address + ", interest=" + interest + ", introduction="
 				+ introduction + ", remAccountStatus=" + remAccountStatus
-				+ ", remPasswordStatus=" + remPasswordStatus + "]";
+				+ ", remPasswordStatus=" + remPasswordStatus
+				+ ", preLoginStatus=" + preLoginStatus + "]";
 	}
+	
 	
 	
 }

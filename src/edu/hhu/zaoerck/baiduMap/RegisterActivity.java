@@ -4,6 +4,9 @@ import java.util.Calendar;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import edu.hhu.zaoerck.baiduMap.domain.User;
+import edu.hhu.zaoerck.baiduMap.service.UserService;
+
 import android.os.Bundle;
 import android.app.Activity;
 import android.app.DatePickerDialog;
@@ -35,9 +38,11 @@ public class RegisterActivity extends Activity {
 	Spinner spinner;
 	EditText introduction;
 	Button register2;
-	SharedPreferences sp;
-	Editor editor;
+//	SharedPreferences sp;
+//	Editor editor;
 	String interest;
+	UserService userService;
+	User user;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -78,8 +83,10 @@ public class RegisterActivity extends Activity {
 				
 			}
 		});
-		sp = getSharedPreferences("baiduMap", Context.MODE_PRIVATE);
-		editor = sp.edit();
+//		sp = getSharedPreferences("baiduMap", Context.MODE_PRIVATE);
+//		editor = sp.edit();
+		userService = new UserService(RegisterActivity.this);
+		user = new User();
 		
 	}
 	
@@ -113,12 +120,14 @@ public class RegisterActivity extends Activity {
 				
 				
 				//2.做一些数据格式和有效性的验证
-				String accountFromSp = sp.getString("account", "");
+//				String accountFromSp = sp.getString("account", "");
+				boolean isfound = userService.find("account", accountStr);
 				if((accountStr.equals(""))||(passwordStr.equals(""))||(rePasswordStr.equals(""))){
 					Toast.makeText(RegisterActivity.this, "账号或密码不能为空！", Toast.LENGTH_LONG).show();
 				}
 				//2.1账号是否存在的验证
-				else if((!accountFromSp.equals(""))&&(accountFromSp.equals(accountStr))){
+//				else if((!accountFromSp.equals(""))&&(accountFromSp.equals(accountStr))){
+				else if(isfound){
 					Toast.makeText(RegisterActivity.this, "账号已存在！", Toast.LENGTH_LONG).show();
 				}
 				//2.2密码是否一致的验证
@@ -156,19 +165,32 @@ public class RegisterActivity extends Activity {
 						Toast.makeText(RegisterActivity.this, "自我介绍不能为空", Toast.LENGTH_LONG).show();
 					}
 					else{
-						editor.putString("account", accountStr);
-						editor.putString("password", passwordStr);
-						editor.putString("rePassword", rePasswordStr);
-						editor.putString("gender", gender);
-						editor.putString("phoneNum", phoneNumStr);
-						editor.putString("email", emailStr);
-						editor.putString("birthday", birthdayStr);
-						editor.putString("address", addressStr);
-						editor.putString("interest", interestStr);
-						editor.putString("introduction", introductionStr);
-					
-						//提交存储信息并提示
-						editor.commit();
+//						editor.putString("account", accountStr);
+//						editor.putString("password", passwordStr);
+//						editor.putString("rePassword", rePasswordStr);
+//						editor.putString("gender", gender);
+//						editor.putString("phoneNum", phoneNumStr);
+//						editor.putString("email", emailStr);
+//						editor.putString("birthday", birthdayStr);
+//						editor.putString("address", addressStr);
+//						editor.putString("interest", interestStr);
+//						editor.putString("introduction", introductionStr);
+//					
+//						//提交存储信息并提示
+//						editor.commit();
+						user.setAccount(accountStr);
+						user.setPassword(passwordStr);
+						user.setGender(gender);
+						user.setBirthday(birthdayStr);
+						user.setPhoneNum(phoneNumStr);
+						user.setEmail(emailStr);
+						user.setAddress(addressStr);
+						user.setInterest(interestStr);
+						user.setIntroduction(introductionStr);
+						user.setRemAccountStatus("0");
+						user.setRemPasswordStatus("0");
+						user.setPreLoginStatus("0");
+						userService.register(user);
 						Toast.makeText(RegisterActivity.this, "注册成功", Toast.LENGTH_LONG).show();
 						finish();
 					}
