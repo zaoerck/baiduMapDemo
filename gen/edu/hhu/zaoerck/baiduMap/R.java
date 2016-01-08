@@ -15,6 +15,7 @@ public final class R {
     }
     public static final class color {
         public static final int background_normal=0x7f050000;
+        public static final int red=0x7f050002;
         public static final int text_color=0x7f050001;
     }
     public static final class dimen {
@@ -47,43 +48,44 @@ public final class R {
         public static final int about_btn_introduction=0x7f0a0002;
         public static final int about_htv_versionname=0x7f0a0000;
         public static final int account=0x7f0a0004;
-        public static final int action_settings=0x7f0a0029;
+        public static final int action_settings=0x7f0a002a;
         public static final int birthAddress=0x7f0a0009;
-        public static final int birthdate=0x7f0a0008;
-        public static final int bmapView=0x7f0a001e;
-        public static final int cancel=0x7f0a0025;
-        public static final int city=0x7f0a0026;
-        public static final int cityA=0x7f0a000d;
-        public static final int cityB=0x7f0a000f;
-        public static final int condition=0x7f0a0016;
-        public static final int email=0x7f0a0007;
-        public static final int female=0x7f0a0023;
+        public static final int birthdate=0x7f0a0006;
+        public static final int bmapView=0x7f0a001f;
+        public static final int cancel=0x7f0a0026;
+        public static final int city=0x7f0a0027;
+        public static final int cityA=0x7f0a000e;
+        public static final int cityB=0x7f0a0010;
+        public static final int condition=0x7f0a0017;
+        public static final int email=0x7f0a0008;
+        public static final int female=0x7f0a0024;
         public static final int gender=0x7f0a0005;
         public static final int interest=0x7f0a000a;
         public static final int introduction=0x7f0a000b;
-        public static final int jingduEditTextId=0x7f0a0027;
-        public static final int latitude_placeA=0x7f0a0012;
-        public static final int latitude_placeB=0x7f0a0015;
-        public static final int locate=0x7f0a0020;
-        public static final int locate_btn=0x7f0a001f;
-        public static final int login=0x7f0a001c;
-        public static final int longitude_placeA=0x7f0a0011;
-        public static final int longitude_placeB=0x7f0a0014;
-        public static final int male=0x7f0a0022;
-        public static final int nameA=0x7f0a000c;
-        public static final int nameB=0x7f0a000e;
-        public static final int password=0x7f0a0019;
-        public static final int phoneNum=0x7f0a0006;
-        public static final int positionA=0x7f0a0010;
-        public static final int positionB=0x7f0a0013;
-        public static final int rePassword=0x7f0a0021;
-        public static final int register=0x7f0a001d;
-        public static final int register2=0x7f0a0024;
-        public static final int remAccount=0x7f0a001a;
-        public static final int remPassword=0x7f0a001b;
-        public static final int weiduEditTextId=0x7f0a0028;
-        public static final int withCityName=0x7f0a0017;
-        public static final int withPosition=0x7f0a0018;
+        public static final int jingduEditTextId=0x7f0a0028;
+        public static final int latitude_placeA=0x7f0a0013;
+        public static final int latitude_placeB=0x7f0a0016;
+        public static final int locate=0x7f0a0021;
+        public static final int locate_btn=0x7f0a0020;
+        public static final int login=0x7f0a001d;
+        public static final int logout=0x7f0a000c;
+        public static final int longitude_placeA=0x7f0a0012;
+        public static final int longitude_placeB=0x7f0a0015;
+        public static final int male=0x7f0a0023;
+        public static final int nameA=0x7f0a000d;
+        public static final int nameB=0x7f0a000f;
+        public static final int password=0x7f0a001a;
+        public static final int phoneNum=0x7f0a0007;
+        public static final int positionA=0x7f0a0011;
+        public static final int positionB=0x7f0a0014;
+        public static final int rePassword=0x7f0a0022;
+        public static final int register=0x7f0a001e;
+        public static final int register2=0x7f0a0025;
+        public static final int remAccount=0x7f0a001b;
+        public static final int remPassword=0x7f0a001c;
+        public static final int weiduEditTextId=0x7f0a0029;
+        public static final int withCityName=0x7f0a0018;
+        public static final int withPosition=0x7f0a0019;
     }
     public static final class layout {
         public static final int activity_about=0x7f030000;

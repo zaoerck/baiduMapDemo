@@ -1,7 +1,5 @@
 package edu.hhu.zaoerck.baiduMap.service;
 
-import java.util.Set;
-
 import edu.hhu.zaoerck.baiduMap.domain.User;
 import android.content.Context;
 import android.database.Cursor;
